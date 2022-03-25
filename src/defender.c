@@ -18,10 +18,9 @@
 
 direction_t execute_defender_strategy(
     position_t defender_position, Spy attacker_spy) {
-  // TODO: unused parameters, remove these lines later
-  UNUSED(attacker_spy);
 
   int i;
+  static int rounds = 1;
 
   static direction_t directions_priorities[] = {DIR_UP_LEFT, DIR_DOWN_LEFT,
   DIR_LEFT, DIR_UP, DIR_DOWN, DIR_UP_RIGHT, DIR_DOWN_RIGHT, DIR_RIGHT};
@@ -37,6 +36,109 @@ direction_t execute_defender_strategy(
       directions_priorities[i] = directions_priorities[i + 1];
     directions_priorities[7] = tmp;
   }
+
+  /* Usar Spy depois de 5 rodadas */
+  if (rounds == 5){
+
+    position_t attacker_position = get_spy_position(attacker_spy);
+
+    /* Se o atacante estiver à direita do defensor */
+    if (attacker_position.j > defender_position.j){
+
+      /* Atacante está abaixo do defensor */
+      if (attacker_position.i > defender_position.i){
+        directions_priorities[0] = (direction_t) DIR_DOWN_RIGHT;
+        directions_priorities[1] = (direction_t) DIR_RIGHT;
+        directions_priorities[2] = (direction_t) DIR_DOWN;
+        directions_priorities[3] = (direction_t) DIR_DOWN_LEFT;
+        directions_priorities[4] = (direction_t) DIR_UP_RIGHT;
+        directions_priorities[5] = (direction_t) DIR_LEFT;
+        directions_priorities[6] = (direction_t) DIR_UP_LEFT;
+        directions_priorities[7] = (direction_t) DIR_UP;
+      }
+      else if (attacker_position.i < defender_position.i){ /* Em cima */
+        directions_priorities[0] = (direction_t) DIR_UP_RIGHT;
+        directions_priorities[1] = (direction_t) DIR_RIGHT;
+        directions_priorities[2] = (direction_t) DIR_UP;
+        directions_priorities[3] = (direction_t) DIR_UP_LEFT;
+        directions_priorities[4] = (direction_t) DIR_DOWN_RIGHT;
+        directions_priorities[5] = (direction_t) DIR_LEFT;
+        directions_priorities[6] = (direction_t) DIR_DOWN_LEFT;
+        directions_priorities[7] = (direction_t) DIR_DOWN;
+      }
+      else{ /* Mesma altura */
+        directions_priorities[0] = (direction_t) DIR_RIGHT;
+        directions_priorities[1] = (direction_t) DIR_UP_RIGHT;
+        directions_priorities[2] = (direction_t) DIR_DOWN_RIGHT;
+        directions_priorities[3] = (direction_t) DIR_UP;
+        directions_priorities[4] = (direction_t) DIR_UP_LEFT;
+        directions_priorities[5] = (direction_t) DIR_LEFT;
+        directions_priorities[6] = (direction_t) DIR_DOWN_LEFT;
+        directions_priorities[7] = (direction_t) DIR_DOWN;
+      }
+    }
+    else if (attacker_position.j > defender_position.j){ /* Esquerda */
+
+      /* Atacante está abaixo do defensor */
+      if (attacker_position.i > defender_position.i){
+        directions_priorities[0] = (direction_t) DIR_DOWN_LEFT;
+        directions_priorities[1] = (direction_t) DIR_LEFT;
+        directions_priorities[2] = (direction_t) DIR_DOWN;
+        directions_priorities[3] = (direction_t) DIR_DOWN_RIGHT;
+        directions_priorities[4] = (direction_t) DIR_UP_LEFT;
+        directions_priorities[5] = (direction_t) DIR_RIGHT;
+        directions_priorities[6] = (direction_t) DIR_UP_RIGHT;
+        directions_priorities[7] = (direction_t) DIR_UP;
+      }
+      else if (attacker_position.i < defender_position.i){ /* Atacante em cima */
+        directions_priorities[0] = (direction_t) DIR_UP_LEFT;
+        directions_priorities[1] = (direction_t) DIR_LEFT;
+        directions_priorities[2] = (direction_t) DIR_UP;
+        directions_priorities[3] = (direction_t) DIR_UP_RIGHT;
+        directions_priorities[4] = (direction_t) DIR_DOWN_LEFT;
+        directions_priorities[5] = (direction_t) DIR_RIGHT;
+        directions_priorities[6] = (direction_t) DIR_DOWN_RIGHT;
+        directions_priorities[7] = (direction_t) DIR_DOWN;
+      }
+      else{ /* Mesma altura */
+        directions_priorities[0] = (direction_t) DIR_LEFT;
+        directions_priorities[1] = (direction_t) DIR_UP_LEFT;
+        directions_priorities[2] = (direction_t) DIR_UP;
+        directions_priorities[3] = (direction_t) DIR_UP_RIGHT;
+        directions_priorities[4] = (direction_t) DIR_DOWN_LEFT;
+        directions_priorities[5] = (direction_t) DIR_RIGHT;
+        directions_priorities[6] = (direction_t) DIR_DOWN_RIGHT;
+        directions_priorities[7] = (direction_t) DIR_DOWN;
+      }
+    }
+    else{ /* Mesma coluna */
+
+      /* Atacante está abaixo do defensor */
+      if (attacker_position.i > defender_position.i){
+        directions_priorities[0] = (direction_t) DIR_DOWN_RIGHT;
+        directions_priorities[1] = (direction_t) DIR_DOWN;
+        directions_priorities[2] = (direction_t) DIR_RIGHT;
+        directions_priorities[3] = (direction_t) DIR_DOWN_LEFT;
+        directions_priorities[4] = (direction_t) DIR_UP_LEFT;
+        directions_priorities[5] = (direction_t) DIR_UP_RIGHT;
+        directions_priorities[6] = (direction_t) DIR_UP;
+        directions_priorities[7] = (direction_t) DIR_LEFT;
+      }
+      else if (attacker_position.i < defender_position.i){ /* Atacante em cima */
+        directions_priorities[0] = (direction_t) DIR_UP_RIGHT;
+        directions_priorities[1] = (direction_t) DIR_UP;
+        directions_priorities[2] = (direction_t) DIR_RIGHT;
+        directions_priorities[3] = (direction_t) DIR_UP_LEFT;
+        directions_priorities[4] = (direction_t) DIR_DOWN_RIGHT;
+        directions_priorities[5] = (direction_t) DIR_DOWN_LEFT;
+        directions_priorities[6] = (direction_t) DIR_DOWN;
+        directions_priorities[7] = (direction_t) DIR_LEFT;
+      }
+    }
+
+  }
+
+  rounds++;
 
   previous_position = defender_position;
 
